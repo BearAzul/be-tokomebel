@@ -7,8 +7,8 @@ const userSchema = new Schema({
   role: {
     type: String,
     required: [true, "Role harus diisi"],
-    enum: ["user", "owner"],
-    default: "user",
+    enum: ["customer", "owner"],
+    default: "customer",
   },
   name: {
     type: String,
@@ -30,7 +30,7 @@ const userSchema = new Schema({
     minLength: [6, "Password minimal 6 karakter"],
   },
   confirmPassword: {
-    type: String, 
+    type: String,
     required: [false, "Konfirmasi password harus diisi"],
     validate: {
       validator: function (el) {
@@ -38,6 +38,23 @@ const userSchema = new Schema({
       },
       message: "Konfirmasi password tidak cocok dengan password",
     },
+  },
+  phone: {
+    type: String,
+    required: [false, "Nomor telepon harus diisi"],
+  },
+  address: {
+    type: String,
+    required: [false, "Alamat harus diisi"],
+  },
+  gender: {
+    type: String,
+    required: [false, "Jenis kelamin harus diisi"],
+    enum: ["Male", "Female", "Other"],
+  },
+  city: {
+    type: String,
+    required: [false, "Kota harus diisi"],
   },
 });
 
