@@ -90,7 +90,7 @@ export const AllUser = asyncHandler(async (req, res) => {
 
   return res.status(200).json({
     data: user,
-    message: "Berhasil tampil semua order",
+    message: "Berhasil tampil semua User",
     count: countUser
   });
 });
