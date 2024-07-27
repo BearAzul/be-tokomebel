@@ -4,7 +4,30 @@ import { v2 as cloudinary } from "cloudinary";
 import streamifier from "streamifier";
 
 export const CreateProduct = asyncHandler(async (req, res) => {
-  const newProduct = await Product.create(req.body);
+  let imageUrl;
+
+  if (req.file) {
+    const stream = cloudinary.uploader.upload_stream(
+      {
+        folder: "uploads",
+        allowed_formats: ["jpg", "png"],
+      },
+      (err, result) => {
+        if (err) {
+          console.log(err);
+          return res.status(500).json({
+            message: "Gagal upload gambar",
+            error: err,
+          });
+        }
+        imageUrl = result.secure_url;
+      }
+    );
+
+    streamifier.createReadStream(req.file.buffer).pipe(stream);
+  }
+
+  const newProduct = await Product.create({ ...req.body, image: imageUrl });
 
   res.status(201).json({
     message: "Product created successfully",
