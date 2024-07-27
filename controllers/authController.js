@@ -28,7 +28,7 @@ const createSendResToken = (user, statusCode, res) => {
 export const registerUser = asyncHandler(async (req, res) => {
   const isOwner = (await User.countDocuments()) === 0;
   const role = isOwner ? "owner" : "customer";
-  const { name, email, password, confirmPassword } = req.body;
+  const { name, email, password, confirmPassword, phone } = req.body;
 
   if (password !== confirmPassword) {
     res.status(400);
@@ -38,6 +38,7 @@ export const registerUser = asyncHandler(async (req, res) => {
     role: role,
     name: name,
     email: email,
+    phone: phone,
     password: password,
   });
 

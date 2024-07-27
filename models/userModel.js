@@ -41,20 +41,20 @@ const userSchema = new Schema({
   },
   phone: {
     type: String,
-    required: [false, "Nomor telepon harus diisi"],
+    default: "",
   },
   address: {
     type: String,
-    required: [false, "Alamat harus diisi"],
+    default: "",
   },
   gender: {
     type: String,
-    required: [false, "Jenis kelamin harus diisi"],
-    enum: ["Male", "Female", "Other"],
+    default: "",
+    enum: ["Male", "Female"],
   },
   city: {
     type: String,
-    required: [false, "Kota harus diisi"],
+    default: "",
   },
 });
 
