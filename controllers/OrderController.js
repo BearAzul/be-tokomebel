@@ -55,9 +55,12 @@ export const CreateOrder = asyncHandler(async (req, res) => {
 export const AllOrder = asyncHandler(async (req, res) => {
   const order = await Order.find()
 
+  let countOrder = await Order.countDocuments();
+
   return res.status(200).json({
     data: order,
     message: "Berhasil tampil semua order",
+    count: countOrder
   })
 });
 

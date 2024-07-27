@@ -86,9 +86,12 @@ export const logoutUser = async (req, res) => {
 export const AllUser = asyncHandler(async (req, res) => {
   const user = await User.find();
 
+  let countUser = await User.countDocuments();
+
   return res.status(200).json({
     data: user,
     message: "Berhasil tampil semua order",
+    count: countUser
   });
 });
 
