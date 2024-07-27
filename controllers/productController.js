@@ -5,29 +5,40 @@ import streamifier from "streamifier";
 
 export const CreateProduct = asyncHandler(async (req, res) => {
   let imageUrl;
-
   if (req.file) {
-    const stream = cloudinary.uploader.upload_stream(
-      {
-        folder: "uploads",
-        allowed_formats: ["jpg", "png"],
-      },
-      (err, result) => {
-        if (err) {
-          console.log(err);
-          return res.status(500).json({
-            message: "Gagal upload gambar",
-            error: err,
-          });
-        }
-        imageUrl = result.secure_url;
-      }
-    );
+    try {
+      const result = await new Promise((resolve, reject) => {
+        const stream = cloudinary.uploader.upload_stream(
+          {
+            folder: "uploads",
+            allowed_formats: ["jpg", "png"],
+          },
+          (err, result) => {
+            if (err) {
+              reject(err);
+            } else {
+              resolve(result);
+            }
+          }
+        );
 
-    streamifier.createReadStream(req.file.buffer).pipe(stream);
+        streamifier.createReadStream(req.file.buffer).pipe(stream);
+      });
+
+      imageUrl = result.secure_url;
+    } catch (err) {
+      console.log(err);
+      return res.status(500).json({
+        message: "Gagal upload gambar",
+        error: err,
+      });
+    }
   }
-
-  const newProduct = await Product.create({ ...req.body, image: imageUrl });
+  const productData = {
+    ...req.body,
+    image: imageUrl,
+  };
+  const newProduct = await Product.create(productData);
 
   res.status(201).json({
     message: "Product created successfully",
@@ -96,10 +107,54 @@ export const detailProduct = asyncHandler(async (req, res) => {
 export const updateProduct = asyncHandler(async (req, res) => {
   const paramId = req.params.id;
 
-  const updateProduct = await Product.findByIdAndUpdate(paramId, req.body, {
+  let imageUrl;
+
+  if (req.file) {
+    try {
+      const result = await new Promise((resolve, reject) => {
+        const stream = cloudinary.uploader.upload_stream(
+          {
+            folder: "uploads",
+            allowed_formats: ["jpg", "png"],
+          },
+          (err, result) => {
+            if (err) {
+              reject(err);
+            } else {
+              resolve(result);
+            }
+          }
+        );
+
+        streamifier.createReadStream(req.file.buffer).pipe(stream);
+      });
+
+      imageUrl = result.secure_url;
+    } catch (err) {
+      console.log(err);
+      return res.status(500).json({
+        message: "Gagal upload gambar",
+        error: err,
+      });
+    }
+  }
+
+  const updateData = {
+    ...req.body,
+    ...(imageUrl && { image: imageUrl }),
+  };
+
+  const updateProduct = await Product.findByIdAndUpdate(paramId, updateData, {
     runValidators: false,
     new: true,
   });
+
+   if (!updateProduct) {
+     return res.status(404).json({
+       message: "Product not found",
+     });
+   }
+
 
   return res.status(201).json({
     message: "Berhasil update product",
@@ -133,9 +188,9 @@ export const Fileupload = asyncHandler(async (req, res) => {
       res.json({
         message: "Berhasil upload gambar",
         url: result.secure_url,
-      })
+      });
     }
   );
 
-  streamifier.createReadStream(req.file.buffer).pipe(stream)
+  streamifier.createReadStream(req.file.buffer).pipe(stream);
 });
