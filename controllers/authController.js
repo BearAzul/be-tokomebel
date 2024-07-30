@@ -115,7 +115,7 @@ export const updateUser = asyncHandler(async (req, res) => {
       const result = await new Promise((resolve, reject) => {
         const stream = cloudinary.uploader.upload_stream(
           {
-            folder: "users",
+            folder: "uploads",
             allowed_formats: ["jpg", "png"],
           },
           (err, result) => {
