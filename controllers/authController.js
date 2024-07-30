@@ -1,6 +1,8 @@
 import User from "../models/userModel.js";
 import jwt from "jsonwebtoken";
 import asyncHandler from "../middlewares/asyncHandler.js";
+import { v2 as cloudinary } from "cloudinary";
+import streamifier from "streamifier";
 
 const signToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
