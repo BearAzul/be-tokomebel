@@ -55,6 +55,10 @@ const userSchema = new Schema({
     type: String,
     default: "",
   },
+  image: {
+    type: String,
+    default: null,
+  }
 });
 
 userSchema.pre("save", async function (next) {

@@ -3,7 +3,7 @@ import Product from "../models/productModel.js";
 import Order from "../models/orderModel.js";
 
 export const CreateOrder = asyncHandler(async (req, res) => {
-  const { firstname, lastname, phone, email, address, city, cartItem } =
+  const { fullname, phone, email, address, city, cartItem } =
     req.body;
   if (!cartItem || cartItem.length < 1) {
     res.status(400);
@@ -36,8 +36,7 @@ export const CreateOrder = asyncHandler(async (req, res) => {
   const order = await Order.create({
     itemsDetail: orderItem,
     total,
-    firstname,
-    lastname,
+    fullname,
     phone,
     email,
     city,
@@ -97,7 +96,7 @@ export const DeleteOrder = asyncHandler(async (req, res) => {
 
 export const CurrentUserOrder = asyncHandler(async (req, res) => {
   const order = await Order.find({
-  'user': req.user.id
+  'customer': req.user.id
   })
   
   return res.status(200).json({

@@ -6,7 +6,6 @@ import { notFound, errorHandler } from "./middlewares/errorMiddleware.js";
 import cookieParser from "cookie-parser";
 import helmet from "helmet";
 import ExpressMongoSanitize from "express-mongo-sanitize";
-
 import { v2 as cloudinary } from "cloudinary";
 
 dotenv.config();
@@ -37,6 +36,7 @@ app.use(express.static("./public"));
 import authRouter from "./routers/authRouter.js";
 import productRouter from "./routers/productRouter.js";
 import OrderRouter from "./routers/orderRouter.js";
+
 // Parent Router
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/product", productRouter);
@@ -46,6 +46,7 @@ app.use(errorHandler);
 app.listen(port, () => {
   console.log(`Berjalan ya ges yak dengan port: ${port}`);
 });
+
 // Connection DB
 mongoose
   .connect(process.env.DATABASE, {})

@@ -108,7 +108,44 @@ export const deleteUser = asyncHandler(async (req, res) => {
 export const updateUser = asyncHandler(async (req, res) => {
   const paramId = req.params.id;
 
-  const updateUser = await User.findByIdAndUpdate(paramId, req.body, {
+  let imageUrl;
+
+  if (req.file) {
+    try {
+      const result = await new Promise((resolve, reject) => {
+        const stream = cloudinary.uploader.upload_stream(
+          {
+            folder: "users",
+            allowed_formats: ["jpg", "png"],
+          },
+          (err, result) => {
+            if (err) {
+              reject(err);
+            } else {
+              resolve(result);
+            }
+          }
+        );
+
+        streamifier.createReadStream(req.file.buffer).pipe(stream);
+      });
+
+      imageUrl = result.secure_url;
+    } catch (err) {
+      console.log(err);
+      return res.status(500).json({
+        message: "Gagal upload gambar",
+        error: err,
+      });
+    }
+  }
+
+  const updateProfile = {
+    ...req.body,
+    ...(imageUrl && { image: imageUrl }),
+  };
+
+  const updateUser = await User.findByIdAndUpdate(paramId, updateProfile, {
     runValidators: false,
     new: true,
   });
