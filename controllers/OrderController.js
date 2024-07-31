@@ -76,9 +76,7 @@ export const DetailOrder = asyncHandler(async (req, res) => {
 export const UpdateOrder = asyncHandler(async (req, res) => {
   const paramId = req.params.id;
 
-  const updateData = { ...req.body, status: "success" };
-
-  const updateOrder = await Order.findByIdAndUpdate(paramId, updateData, {
+  const updateOrder = await Order.findByIdAndUpdate(paramId, req.body, {
     runValidators: false,
     new: true,
   });
