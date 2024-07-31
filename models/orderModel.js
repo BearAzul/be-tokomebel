@@ -18,6 +18,10 @@ const singleProduct = Schema({
     type: String,
     required: true,
   },
+  image: {
+    type: String,
+    required: true,
+  },
   product: {
     type: mongoose.Schema.ObjectId,
     ref: "Product",
@@ -31,7 +35,7 @@ const orderSchema = new Schema({
     required: [true, "Total harga harus diisi"],
   },
   itemsDetail: [singleProduct],
-  user: {
+  customer: {
     type: Schema.ObjectId,
     ref: "User",
     required: true,
@@ -41,13 +45,9 @@ const orderSchema = new Schema({
     enum: ["pending", "failed", "success"],
     default: "pending",
   },
-  firstname: {
+  fullname: {
     type: String,
-    required: [true, "Nama Depan harus diisi"],
-  },
-  lastname: {
-    type: String,
-    required: [true, "Nama Belakang harus diisi"],
+    required: [true, "Nama lengkap harus diisi"],
   },
   phone: {
     type: String,
@@ -65,6 +65,10 @@ const orderSchema = new Schema({
     type: String,
     required: [true, "Alamat harus diisi"],
   },
+  image: {
+    type: String,
+    default: null,
+  }
 });
 
 const Order = mongoose.model("Order", orderSchema);

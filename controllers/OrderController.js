@@ -3,7 +3,7 @@ import Product from "../models/productModel.js";
 import Order from "../models/orderModel.js";
 
 export const CreateOrder = asyncHandler(async (req, res) => {
-  const { fullname, phone, email, address, city, cartItem } =
+  const { image, fullname, phone, email, address, city, cartItem } =
     req.body;
   if (!cartItem || cartItem.length < 1) {
     res.status(400);
@@ -19,11 +19,12 @@ export const CreateOrder = asyncHandler(async (req, res) => {
       throw new Error("ID Product tidak ditemukan");
     }
 
-    const { name, price, category, _id } = productData;
+    const { image, name, price, category, _id } = productData;
     const singleProduct = {
       quantity: cart.quantity,
       name,
       price,
+      image,
       category,
       product: _id,
     };
@@ -36,12 +37,13 @@ export const CreateOrder = asyncHandler(async (req, res) => {
   const order = await Order.create({
     itemsDetail: orderItem,
     total,
+    image,
     fullname,
     phone,
     email,
     city,
     address,
-    user: req.user.id
+    customer: req.user.id
   })
 
   return res.status(200).json({
@@ -74,7 +76,9 @@ export const DetailOrder = asyncHandler(async (req, res) => {
 export const UpdateOrder = asyncHandler(async (req, res) => {
   const paramId = req.params.id;
 
-  const updateOrder = await Product.findByIdAndUpdate(paramId, req.body, {
+  const updateData = { ...req.body, status: "success" };
+
+  const updateOrder = await Order.findByIdAndUpdate(paramId, updateData, {
     runValidators: false,
     new: true,
   });
