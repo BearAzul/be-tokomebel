@@ -25,7 +25,7 @@ app.use(ExpressMongoSanitize());
 app.use(cookieParser());
 app.use(
   cors({
-    origin: "https://fe-tokomebel.vercel.app/",
+    origin: "https://fe-tokomebel.vercel.app",
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })
